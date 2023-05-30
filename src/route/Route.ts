@@ -1,10 +1,11 @@
 import { Middleware } from '../middleware/Middleware';
+import { Request, Response, NextFunction } from 'express';
 
 export interface RouteParameters {
     [key: string]: string;
 }
 
-export type RouteHandler = (params: RouteParameters) => void;
+export type RouteHandler = (req: Request, res: Response, next: NextFunction) => void | Promise<void>;
 
 export class Route {
     private name: string;
@@ -35,3 +36,4 @@ export class Route {
         return this.middlewares;
     }
 }
+

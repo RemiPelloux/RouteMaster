@@ -1,4 +1,6 @@
-export type MiddlewareFunction = (req: any, res: any, next: () => void) => void;
+import { Request, Response, NextFunction } from 'express';
+
+export type MiddlewareFunction = (req: Request, res: Response, next: NextFunction) => void | Promise<void>;
 
 export class Middleware {
     private _function: MiddlewareFunction;

@@ -8,7 +8,7 @@ export class URLGenerator {
         this.router = router;
     }
 
-    generateUrl(name: string, parameters: RouteParameters): string | null {
-        return this.router.generateUrl(name, parameters);
+    generate(routeName: string, parameters: RouteParameters): string | null {
+        return this.router.generateUrl(routeName, parameters);
     }
 }
