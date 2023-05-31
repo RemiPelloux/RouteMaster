@@ -2,7 +2,7 @@
 
 A powerful routing library for TypeScript, designed to make your life easier when dealing with routing in your application. Define named routes, generate URLs, match URLs to routes, add middleware, and more, all with strong TypeScript support.
 
-Route Enhancer is framework-agnostic and comes with adapters for popular Node.js frameworks like Express.js, Koa.js, and Hapi.js.
+Route Enhancer is framework-agnostic and comes with adapters for popular Node.js frameworks like Express.js
 
 ## Features
 
