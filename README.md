@@ -1,75 +1,92 @@
 # Route Enhancer
 
-A powerful routing library for TypeScript, designed to make your life easier when dealing with routing in your application. Define named routes, generate URLs, match URLs to routes, add middleware, and more, all with strong TypeScript support.
-
-Route Enhancer is framework-agnostic and comes with adapters for popular Node.js frameworks like Express.js
+A minimalistic routing library for Node.js, designed with simplicity and extensibility in mind.
 
 ## Features
 
-- **Named routes**: Define names for your routes, much like you can with Symfony's routing system.
-- **URL generation**: Generate a URL for a named route, optionally with parameters. This includes routes with optional parameters.
-- **Route matching**: Match a given URL to a route, extracting parameters in the process.
-- **Middleware support**: Attach middleware to routes, which get run before the route's main handler.
-- **Framework integration**: Use the provided adapters to easily integrate Route Enhancer with your server application.
-- **Strong TypeScript support**: Take advantage of TypeScript's static type checking to catch errors early and make your code easier to understand and refactor.
+- URL pattern matching
+- URL generation for named routes
+- Middleware support
+- Parameter validation
 
 ## Installation
-
-To install Route Enhancer, use the following command:
 
 ```bash
 npm install route-enhancer
 ```
 
-Usage
------
+## Usage
 
-For a quick start, see the guide below.
+### Defining routes
 
-```
+First, create a `Router` instance:
 
-import { Route, Router, URLGenerator, Middleware } from 'route-enhancer';
+```typescript
+import { Router } from 'route-enhancer';
 
-// Create a new Router instance
 const router = new Router();
+```
 
-// Add a route to the router
-router.addRoute(new Route('home', '/', (req, res, next) => {
-    // Handler function for the "home" route
-}));
+Then, add routes using the addRoute method:
 
-// Add a route with middleware
-const authMiddleware = new Middleware((req, res, next) => {
-    // Authentication middleware
+```typescript
+import { Route } from 'route-enhancer';
+import Joi from 'joi';
+
+const handler = (req, res, next) => {
+    // Handle request here
+};
+
+// Define a parameter validation schema
+const paramsSchema = Joi.object({
+    id: Joi.string().alphanum().required(),
 });
-router.addRoute(new Route('dashboard', '/dashboard', (req, res, next) => {
-    // Handler function for the "dashboard" route
-}).addMiddleware(authMiddleware));
 
-// Generate a URL for a named route
-const urlGenerator = new URLGenerator(router);
-const dashboardUrl = urlGenerator.generate('dashboard'); // Returns "/dashboard"
+const route = new Route('user', '/user/:id', handler, [], paramsSchema);
+
+router.addRoute(route);
+```
+
+
+## Matching URLs to routes
+### Use the matchUrl method to find the route that matches a given URL:
+
+```typescript
+const route = router.matchUrl('/user/123');
+
+if (route) {
+    // Route was found
+}
 
 ```
-Framework Integration
----------------------
 
-To use Route Enhancer with Express.js, import the Express.js adapter and add it as middleware to your Express.js application:
+### Generating URLs for named routes
+## Use the generateUrl method to generate a URL for a named route:
 
+```typescript
+const url = router.generateUrl('user', { id: '123' });
+
+// url is now '/user/123'
 ```
-import express from 'express';
-import { expressAdapter } from 'route-enhancer/framework-integration/expressAdapter';
 
-const app = express();
+## Parameter Validation
+Routes can be created with a validation schema that defines rules for their parameters. The library uses Joi for parameter validation. When a route is matched, the validateParameters method of the Route class can be used to validate the parameters against the schema:
 
-// Use the Express.js adapter
-app.use(expressAdapter(router));
-
-app.listen(3000, () => {
-console.log('Server is running on port 3000');
+```typescript
+const paramsSchema = Joi.object({
+    id: Joi.string().alphanum().required(),
 });
+
+const route = new Route('user', '/user/:id', handler, [], paramsSchema);
+
+const params = { id: '123' };
+
+try {
+    route.validateParameters(params);
+} catch (err) {
+    // Parameter validation failed
+}
 ```
 
-License
-MIT
-
+## Contributions
+Contributions are welcome! Please submit a pull request or create an issue to propose changes or report bugs.
