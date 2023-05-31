@@ -1,6 +1,6 @@
 {
   "name": "route-enhancer",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A powerful routing library for TypeScript applications.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
