@@ -1,40 +1,75 @@
-# RouteMaster
+# Route Enhancer
 
-RouteMaster is a powerful routing library for TypeScript applications. It provides named routes, URL generation, reverse routing, route matching, middleware support, and integration with popular Node.js frameworks like Express.js, Koa.js, and Hapi.js.
+A powerful routing library for TypeScript, designed to make your life easier when dealing with routing in your application. Define named routes, generate URLs, match URLs to routes, add middleware, and more, all with strong TypeScript support.
+
+Route Enhancer is framework-agnostic and comes with adapters for popular Node.js frameworks like Express.js, Koa.js, and Hapi.js.
 
 ## Features
 
-- **Named Routes**: Define names for your routes and refer to them throughout your application.
-- **URL Generation**: Generate URLs given a route name and a set of parameters.
-- **Reverse Routing**: Generate URLs based on route names and parameters instead of hard-coding URLs.
-- **Route Matching**: Match a given URL to a route, checking if the URL matches the route's pattern and extracting parameters.
-- **Middleware Support**: Attach middleware to routes, implementing features like authentication, authorization, and input validation.
-- **Framework Integration**: Integrate with popular Node.js frameworks like Express.js, Koa.js, and Hapi.js.
-- **Strong TypeScript Support**: Enjoy strong TypeScript support including type-safe parameters and middleware.
+- **Named routes**: Define names for your routes, much like you can with Symfony's routing system.
+- **URL generation**: Generate a URL for a named route, optionally with parameters. This includes routes with optional parameters.
+- **Route matching**: Match a given URL to a route, extracting parameters in the process.
+- **Middleware support**: Attach middleware to routes, which get run before the route's main handler.
+- **Framework integration**: Use the provided adapters to easily integrate Route Enhancer with your server application.
+- **Strong TypeScript support**: Take advantage of TypeScript's static type checking to catch errors early and make your code easier to understand and refactor.
 
 ## Installation
 
-Install RouteMaster via npm:
+To install Route Enhancer, use the following command:
 
 ```bash
-npm install routemaster
+npm install route-enhancer
 ```
 
-## Usage
-Here's a basic example of how to use RouteMaster:
+Usage
+-----
+
+For a quick start, see the guide below.
 
 ```
-// TODO: Add usage example
+
+import { Route, Router, URLGenerator, Middleware } from 'route-enhancer';
+
+// Create a new Router instance
+const router = new Router();
+
+// Add a route to the router
+router.addRoute(new Route('home', '/', (req, res, next) => {
+    // Handler function for the "home" route
+}));
+
+// Add a route with middleware
+const authMiddleware = new Middleware((req, res, next) => {
+    // Authentication middleware
+});
+router.addRoute(new Route('dashboard', '/dashboard', (req, res, next) => {
+    // Handler function for the "dashboard" route
+}).addMiddleware(authMiddleware));
+
+// Generate a URL for a named route
+const urlGenerator = new URLGenerator(router);
+const dashboardUrl = urlGenerator.generate('dashboard'); // Returns "/dashboard"
+
 ```
+Framework Integration
+---------------------
 
-Check out the [documentation](https://github.com/yourusername/routemaster/blob/main/docs/API.md) for more detailed usage instructions.
+To use Route Enhancer with Express.js, import the Express.js adapter and add it as middleware to your Express.js application:
 
-Contributing
-------------
+```
+import express from 'express';
+import { expressAdapter } from 'route-enhancer/framework-integration/expressAdapter';
 
-We welcome contributions! Please check out our [contributing guidelines](https://github.com/yourusername/routemaster/blob/main/docs/CONTRIBUTING.md) for more information.
+const app = express();
+
+// Use the Express.js adapter
+app.use(expressAdapter(router));
+
+app.listen(3000, () => {
+console.log('Server is running on port 3000');
+});
+```
 
 License
--------
+MIT
 
-This project is licensed under the MIT License. See the [LICENSE](https://github.com/yourusername/routemaster/blob/main/LICENSE) file for more information.

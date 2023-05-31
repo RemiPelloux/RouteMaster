@@ -1,6 +1,6 @@
 {
-  "name": "routemaster",
-  "version": "1.0.0",
+  "name": "route-enhancer",
+  "version": "1.0.1",
   "description": "A powerful routing library for TypeScript applications.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yourusername/routemaster.git"
+    "url": "git+https://github.com/RemiPelloux/RouteMaster.git"
   },
   "keywords": [
     "routing",
@@ -26,7 +26,7 @@
   "author": "Remi Plx <pellouxremi@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/RemiPelloux/routemaster/issues"
+    "url": "https://github.com/RemiPelloux/RouteMaster/issues"
   },
   "homepage": "https://github.com/RemiPelloux",
   "devDependencies": {
