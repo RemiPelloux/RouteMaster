@@ -1,11 +1,11 @@
 // tests/framework-integration.test.ts
 import httpMocks from 'node-mocks-http';
 import { Router } from '../src/router/Router';
+import { Route } from '../src/route/Route';
 import { expressAdapter } from '../src/framework-integration/expressAdapter';
 
 const router = new Router();
-// Define your routes here
-// e.g., router.addRoute(...);
+router.addRoute(new Route('home', '/', (req, res, next) => {})); // Add a route that matches the URL '/'
 const expressMiddleware = expressAdapter(router);
 
 test('should match URLs to the correct routes', () => {
