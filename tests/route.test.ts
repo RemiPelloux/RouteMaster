@@ -22,3 +22,11 @@ test('should validate route parameters according to schema', async () => {
     params = { id: 'abc' };
     expect(() => route.validateParameters(params)).not.toThrow();  // this line is corrected
 });
+
+test('should correctly build full path for nested routes', () => {
+    const handler: RouteHandler = (req: Request, res: Response, next: NextFunction) => {};
+    const parentRoute = new Route('user', '/user/:id', handler);
+    const childRoute = new Route('userProfile', '/profile', handler, [], undefined, parentRoute);
+
+    expect(childRoute.getFullPath()).toEqual('/user/:id/profile');
+});

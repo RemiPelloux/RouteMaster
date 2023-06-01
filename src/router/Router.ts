@@ -6,13 +6,18 @@ export type RouteHandler = (req: any, res: any, next: () => void) => void;
 
 export class Router {
     private routes: Map<string, Route>;
+    private children: Map<string, Router>;
 
     constructor() {
         this.routes = new Map();
+        this.children = new Map();
     }
 
     addRoute(route: Route): void {
         this.routes.set(route.getName(), route);
+    }
+    addChildRouter(routeName: string, router: Router): void {
+        this.children.set(routeName, router);
     }
 
     getMiddleware(routeName: string): Middleware[] | undefined {
@@ -22,7 +27,7 @@ export class Router {
 
     matchUrl(url: string): Route | null {
         for (const route of this.routes.values()) {
-            const pattern = new RegExp('^' + route.getPattern().replace(/:\w+/g, '\\w+') + '$');
+            const pattern = new RegExp('^' + route.getFullPath().replace(/:\w+/g, '\\w+') + '$');
             if (pattern.test(url)) {
                 return route;
             }
@@ -30,13 +35,14 @@ export class Router {
         return null;
     }
 
+
     generateUrl(name: string, parameters: RouteParameters): string | null {
         const route = this.routes.get(name);
         if (!route) {
             return null;
         }
 
-        let url = route.getPattern();
+        let url = route.getFullPath();
         for (const [key, value] of Object.entries(parameters)) {
             url = url.replace(`:${key}`, value);
         }
@@ -47,6 +53,14 @@ export class Router {
         const route = this.matchUrl(req.path);
         if (!route) {
             next();
+            return;
+        }
+        const childRouter = this.children.get(route.getName());
+        if (childRouter) {
+            // Remove the matched part from the path.
+            const newPath = req.path.replace(route.getPattern(), '');
+            // Delegate the request to the child Router.
+            childRouter.handleRequest({ ...req, path: newPath }, res, next);
             return;
         }
 
@@ -61,7 +75,7 @@ export class Router {
     }
 
     private extractParamsFromUrl(route: Route, url: string): RouteParameters {
-        const patternParts = route.getPattern().split('/');
+        const patternParts = route.getFullPath().split('/');
         const urlParts = url.split('/');
         const params: RouteParameters = {};
 
